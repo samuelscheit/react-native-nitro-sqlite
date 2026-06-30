@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import {
   ActivityIndicator,
@@ -82,11 +81,10 @@ function initializeDatabase(db: NitroSQLiteConnection) {
   ]
 
   for (const [name, price, category] of products) {
-    db.execute('INSERT INTO products (name, price, category) VALUES (?, ?, ?)', [
-      name,
-      price,
-      category,
-    ])
+    db.execute(
+      'INSERT INTO products (name, price, category) VALUES (?, ?, ?)',
+      [name, price, category],
+    )
   }
 }
 
@@ -122,6 +120,33 @@ function formatQueryResult(result: QueryResult): string {
   }
 
   return JSON.stringify(summary, null, 2)
+}
+
+function SelectableOutput({
+  value,
+  variant = 'output',
+}: {
+  value: string
+  variant?: 'query' | 'output' | 'error'
+}) {
+  const variantStyle =
+    variant === 'query'
+      ? styles.resultQuery
+      : variant === 'error'
+        ? styles.errorText
+        : styles.resultText
+
+  return (
+    <TextInput
+      value={value}
+      editable={false}
+      multiline
+      scrollEnabled={false}
+      showSoftInputOnFocus={false}
+      underlineColorAndroid="transparent"
+      style={[styles.selectableOutput, variantStyle]}
+    />
+  )
 }
 
 function getEntryOutputText(entry: QueryHistoryEntry): string | null {
@@ -175,16 +200,15 @@ function ResultCard({ entry }: { entry: QueryHistoryEntry }) {
           </TouchableOpacity>
         )}
       </View>
-      <Text selectable style={styles.resultQuery}>
-        {entry.query}
-      </Text>
+      <SelectableOutput
+        value={entry.query}
+        variant="query"
+      />
       {outputText != null && (
-        <Text
-          selectable
-          style={hasError ? styles.errorText : styles.resultText}
-        >
-          {outputText}
-        </Text>
+        <SelectableOutput
+          value={outputText}
+          variant={hasError ? 'error' : 'output'}
+        />
       )}
     </View>
   )
@@ -286,6 +310,7 @@ export function SqlConsoleScreen() {
       <ScrollView
         contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"
+        removeClippedSubviews={false}
       >
         <Text style={styles.heading}>SQL Console</Text>
         <Text style={styles.description}>
@@ -344,7 +369,10 @@ export function SqlConsoleScreen() {
           <>
             <Text style={styles.sectionLabel}>Results</Text>
             {history.map((entry, index) => (
-              <ResultCard key={`${entry.query}-${index}`} entry={entry} />
+              <ResultCard
+                key={`${entry.query}-${index}`}
+                entry={entry}
+              />
             ))}
           </>
         )}
@@ -480,6 +508,12 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#374151',
     marginBottom: 8,
+  },
+  selectableOutput: {
+    padding: 0,
+    margin: 0,
+    borderWidth: 0,
+    backgroundColor: 'transparent',
   },
   resultMeta: {
     flex: 1,
