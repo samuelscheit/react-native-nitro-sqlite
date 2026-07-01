@@ -1,5 +1,11 @@
 import { expect } from '../common'
-import { beforeAll, beforeEach, describe, it } from 'react-native-harness'
+import {
+  afterAll,
+  beforeAll,
+  beforeEach,
+  describe,
+  it,
+} from 'react-native-harness'
 import type { Repository } from 'typeorm'
 import { DataSource } from 'typeorm'
 import { typeORMDriver } from 'react-native-nitro-sqlite'
@@ -38,8 +44,35 @@ export default function registerTypeORMUnitTests() {
       await bookRepository.clear()
     })
 
-    it('basic test', () => {
-      expect(1).toBe(1)
+    afterAll(async () => {
+      if (dataSource?.isInitialized) {
+        await dataSource.destroy()
+      }
+    })
+
+    it('inserts and reads entities', async () => {
+      const user = userRepository.create({
+        name: 'Test User',
+        age: 42,
+        networth: 1234.5,
+        metadata: { nickname: 'tester' },
+        avatar: new Uint8Array([1, 2, 3]).buffer,
+      })
+      const book = bookRepository.create({
+        title: 'Test Book',
+      })
+
+      await userRepository.save(user)
+      await bookRepository.save(book)
+
+      const users = await userRepository.find()
+      const books = await bookRepository.find()
+
+      expect(users).toHaveLength(1)
+      expect(users[0]?.name).toBe('Test User')
+      expect(users[0]?.metadata).toEqual({ nickname: 'tester' })
+      expect(books).toHaveLength(1)
+      expect(books[0]?.title).toBe('Test Book')
     })
   })
 }
