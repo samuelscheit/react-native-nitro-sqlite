@@ -21,6 +21,9 @@ jobs:
   test:
     name: Harness Tests (iOS)
     runs-on: macOS-26
+    env:
+      IOS_SIMULATOR_NAME: iPhone 17 Pro
+      IOS_SIMULATOR_OS: "26.2"
 
     steps:
       - uses: actions/checkout@v6
@@ -45,8 +48,46 @@ jobs:
 
       - name: Boot iOS Simulator
         run: |
-          xcrun simctl boot "iPhone 17 Pro (26.2)" || true
-          xcrun simctl bootstatus booted -b
+          set -euo pipefail
+
+          IFS=$'\t' read -r SELECTED_SIMULATOR_UDID SELECTED_SIMULATOR_NAME SELECTED_SIMULATOR_OS <<EOF
+          $(xcrun simctl list devices available --json | ruby -rjson -e '
+            devices = JSON.parse(STDIN.read).fetch("devices")
+            preferred_name = ENV.fetch("IOS_SIMULATOR_NAME")
+            preferred_os = ENV.fetch("IOS_SIMULATOR_OS")
+
+            def os_version(runtime)
+              runtime.split(".").last.sub(/^iOS-/, "").tr("-", ".")
+            end
+
+            candidates = devices.flat_map do |runtime, runtime_devices|
+              next [] unless runtime.include?("SimRuntime.iOS")
+
+              runtime_devices
+                .select { |device| device["isAvailable"] }
+                .map { |device| [runtime, device] }
+            end
+
+            match = candidates.find do |runtime, device|
+              device["name"] == preferred_name && os_version(runtime) == preferred_os
+            end
+            match ||= candidates.find { |_runtime, device| device["name"] == preferred_name }
+            match ||= candidates.find { |_runtime, device| device["name"].start_with?("iPhone") }
+
+            abort("No available iOS simulator found") unless match
+
+            runtime, device = match
+            puts [device["udid"], device["name"], os_version(runtime)].join("\t")
+          ')
+          EOF
+
+          echo "Selected simulator: ${SELECTED_SIMULATOR_NAME} (${SELECTED_SIMULATOR_OS})"
+          echo "IOS_SIMULATOR_UDID=${SELECTED_SIMULATOR_UDID}" >> "$GITHUB_ENV"
+          echo "IOS_SIMULATOR_NAME=${SELECTED_SIMULATOR_NAME}" >> "$GITHUB_ENV"
+          echo "IOS_SIMULATOR_OS=${SELECTED_SIMULATOR_OS}" >> "$GITHUB_ENV"
+
+          xcrun simctl boot "${SELECTED_SIMULATOR_UDID}" || true
+          xcrun simctl bootstatus "${SELECTED_SIMULATOR_UDID}" -b
 
       - name: Build and install debug app
         working-directory: example/ios
@@ -59,7 +100,7 @@ jobs:
             -scheme NitroSQLiteExample \
             -sdk iphonesimulator \
             -configuration Debug \
-            -destination 'platform=iOS Simulator,name=iPhone 17 Pro,OS=26.2' \
+            -destination "platform=iOS Simulator,id=${IOS_SIMULATOR_UDID}" \
             ONLY_ACTIVE_ARCH=YES \
             install \
             CODE_SIGNING_ALLOWED=NO

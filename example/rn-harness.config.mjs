@@ -19,7 +19,10 @@ const config = {
     }),
     applePlatform({
       name: "ios",
-      device: appleSimulator("iPhone 17 Pro", "26.2"),
+      device: appleSimulator(
+        process.env.IOS_SIMULATOR_NAME ?? "iPhone 17 Pro",
+        process.env.IOS_SIMULATOR_OS ?? "26.2",
+      ),
       bundleId: "com.margelo.rnnitrosqlite.example",
     }),
   ],
@@ -32,4 +35,3 @@ const config = {
 };
 
 export default config;
-
