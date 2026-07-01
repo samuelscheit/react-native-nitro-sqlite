@@ -52,5 +52,4 @@ jobs:
           script: >-
             ./gradlew :app:installDebug --no-daemon
             -PreactNativeArchitectures=${{ env.TARGET_ANDROID_ARCH }}
-            && bun --cwd .. run test:harness:android
-
+            && bun run --cwd .. test:harness:android
