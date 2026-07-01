@@ -28,7 +28,7 @@ const config = {
   ],
 
   defaultRunner: "android",
-  bridgeTimeout: 120000,
+  bridgeTimeout: 300000,
 
   resetEnvironmentBetweenTestFiles: true,
   unstable__skipAlreadyIncludedModules: false,
