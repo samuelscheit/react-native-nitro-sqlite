@@ -12,10 +12,7 @@ import type { ColumnType, SQLiteValue } from '../types'
  * @interface QueryResult
  */
 export interface NitroSQLiteQueryResult
-  extends HybridObject<{
-    ios: 'c++'
-    android: 'c++'
-  }> {
+  extends HybridObject<{ ios: 'c++'; android: 'c++' }> {
   readonly rowsAffected: number
   readonly insertId?: number
 
