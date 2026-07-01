@@ -92,7 +92,10 @@ jobs:
       - name: Build and install debug app
         working-directory: example/ios
         run: |
-          set -o pipefail
+          set -euo pipefail
+
+          APP_PATH="build/Build/Products/Debug-iphonesimulator/NitroSQLiteExample.app"
+
           xcodebuild \
             CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ \
             -derivedDataPath build -UseModernBuildSystem=YES \
@@ -102,8 +105,11 @@ jobs:
             -configuration Debug \
             -destination "platform=iOS Simulator,id=${IOS_SIMULATOR_UDID}" \
             ONLY_ACTIVE_ARCH=YES \
-            install \
+            build \
             CODE_SIGNING_ALLOWED=NO
+
+          xcrun simctl install "${IOS_SIMULATOR_UDID}" "${APP_PATH}"
+          xcrun simctl appinfo "${IOS_SIMULATOR_UDID}" "com.margelo.rnnitrosqlite.example" > /dev/null
 
       - name: Run react-native-harness on iOS
         run: bun run --cwd example test:harness:ios
