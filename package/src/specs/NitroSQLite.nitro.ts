@@ -7,8 +7,10 @@ import type {
 } from '../types'
 import type { NitroSQLiteQueryResult } from './NitroSQLiteQueryResult.nitro'
 
-export interface NitroSQLite
-  extends HybridObject<{ ios: 'c++'; android: 'c++' }> {
+export interface NitroSQLite extends HybridObject<{
+  ios: 'c++'
+  android: 'c++'
+}> {
   open(dbName: string, location?: string): void
   close(dbName: string): void
   drop(dbName: string, location?: string): void
