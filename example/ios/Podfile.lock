@@ -3,7 +3,7 @@ PODS:
   - hermes-engine (250829098.0.10):
     - hermes-engine/Pre-built (= 250829098.0.10)
   - hermes-engine/Pre-built (250829098.0.10)
-  - NitroModules (0.35.0):
+  - NitroModules (0.36.1):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -2175,7 +2175,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   FBLazyVector: 4ee5f665093abe339f4b579fc3d59f65c8af196c
   hermes-engine: 56e1f8e0c324283e1cc2c35f56dc6037c141f67d
-  NitroModules: 1d1ba303ec12cf1920170fbbecf29eb6c7170dbb
+  NitroModules: 587af3c2bc93f5c9f9b39aec315eb29509a7c537
   RCTDeprecation: b73940ea69ab57c2c59f845b37b09e1d8b0d0588
   RCTRequired: f3a52c914af5f19f04d02b2091d83e43cf71676c
   RCTSwiftUI: 6dea7b613e8930a973b723c121aa8646374ee694
@@ -2248,7 +2248,7 @@ SPEC CHECKSUMS:
   ReactCommon: 7525e252c88d254545e3fdaea0000d1959dfbf20
   ReactNativeDependencies: 0cdc5c6985700a9d8f654762fa702169ef9cef9b
   RNCClipboard: 7a7d4557bfd3370b35c99dfecd92ae7b9fc4948a
-  RNNitroSQLite: e354c4a31133050e6bbde1c136b8ac4857830236
+  RNNitroSQLite: d4dcda5cae90531900839746ca2009e1db222793
   RNScreens: dd5c879d56b543c7ff8e593739eeb66093d60263
   Yoga: d68c8a4bde0af9c17b15540fffa330d26398d150
 

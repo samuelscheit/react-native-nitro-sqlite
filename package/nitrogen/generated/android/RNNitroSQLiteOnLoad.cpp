@@ -28,9 +28,9 @@ int initialize(JavaVM* vm) {
 }
 
 struct JHybridNitroSQLiteOnLoadSpecImpl: public jni::JavaClass<JHybridNitroSQLiteOnLoadSpecImpl, JHybridNitroSQLiteOnLoadSpec::JavaPart> {
-  static auto constexpr kJavaDescriptor = "Lcom/margelo/nitro/rnnitrosqlite/HybridNitroSQLiteOnLoad;";
+  static constexpr auto kJavaDescriptor = "Lcom/margelo/nitro/rnnitrosqlite/HybridNitroSQLiteOnLoad;";
   static std::shared_ptr<JHybridNitroSQLiteOnLoadSpec> create() {
-    static auto constructorFn = javaClassStatic()->getConstructor<JHybridNitroSQLiteOnLoadSpecImpl::javaobject()>();
+    static const auto constructorFn = javaClassStatic()->getConstructor<JHybridNitroSQLiteOnLoadSpecImpl::javaobject()>();
     jni::local_ref<JHybridNitroSQLiteOnLoadSpec::JavaPart> javaPart = javaClassStatic()->newObject(constructorFn);
     return javaPart->getJHybridNitroSQLiteOnLoadSpec();
   }
