@@ -21,7 +21,7 @@ const config = {
       name: 'ios',
       device: appleSimulator(
         process.env.IOS_SIMULATOR_NAME ?? 'iPhone 17 Pro',
-        process.env.IOS_SIMULATOR_OS ?? '26.2',
+        process.env.IOS_SIMULATOR_OS ?? '26.5',
       ),
       bundleId: 'com.margelo.rnnitrosqlite.example',
     }),
