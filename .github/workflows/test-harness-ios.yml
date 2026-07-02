@@ -46,55 +46,10 @@ jobs:
         working-directory: example
         run: bun pods
 
-      - name: Boot iOS Simulator
-        run: |
-          set -euo pipefail
-
-          IFS=$'\t' read -r SELECTED_SIMULATOR_UDID SELECTED_SIMULATOR_NAME SELECTED_SIMULATOR_OS <<EOF
-          $(xcrun simctl list devices available --json | ruby -rjson -e '
-            devices = JSON.parse(STDIN.read).fetch("devices")
-            preferred_name = ENV.fetch("IOS_SIMULATOR_NAME")
-            preferred_os = ENV.fetch("IOS_SIMULATOR_OS")
-
-            def os_version(runtime)
-              runtime.split(".").last.sub(/^iOS-/, "").tr("-", ".")
-            end
-
-            candidates = devices.flat_map do |runtime, runtime_devices|
-              next [] unless runtime.include?("SimRuntime.iOS")
-
-              runtime_devices
-                .select { |device| device["isAvailable"] }
-                .map { |device| [runtime, device] }
-            end
-
-            match = candidates.find do |runtime, device|
-              device["name"] == preferred_name && os_version(runtime) == preferred_os
-            end
-            match ||= candidates.find { |_runtime, device| device["name"] == preferred_name }
-            match ||= candidates.find { |_runtime, device| device["name"].start_with?("iPhone") }
-
-            abort("No available iOS simulator found") unless match
-
-            runtime, device = match
-            puts [device["udid"], device["name"], os_version(runtime)].join("\t")
-          ')
-          EOF
-
-          echo "Selected simulator: ${SELECTED_SIMULATOR_NAME} (${SELECTED_SIMULATOR_OS})"
-          echo "IOS_SIMULATOR_UDID=${SELECTED_SIMULATOR_UDID}" >> "$GITHUB_ENV"
-          echo "IOS_SIMULATOR_NAME=${SELECTED_SIMULATOR_NAME}" >> "$GITHUB_ENV"
-          echo "IOS_SIMULATOR_OS=${SELECTED_SIMULATOR_OS}" >> "$GITHUB_ENV"
-
-          xcrun simctl boot "${SELECTED_SIMULATOR_UDID}" || true
-          xcrun simctl bootstatus "${SELECTED_SIMULATOR_UDID}" -b
-
-      - name: Build and install debug app
+      - name: Build debug app
         working-directory: example/ios
         run: |
           set -euo pipefail
-
-          APP_PATH="build/Build/Products/Debug-iphonesimulator/NitroSQLiteExample.app"
 
           xcodebuild \
             CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ \
@@ -103,13 +58,14 @@ jobs:
             -scheme NitroSQLiteExample \
             -sdk iphonesimulator \
             -configuration Debug \
-            -destination "platform=iOS Simulator,id=${IOS_SIMULATOR_UDID}" \
-            ONLY_ACTIVE_ARCH=YES \
+            -destination "generic/platform=iOS Simulator" \
             build \
             CODE_SIGNING_ALLOWED=NO
 
-          xcrun simctl install "${IOS_SIMULATOR_UDID}" "${APP_PATH}"
-          xcrun simctl appinfo "${IOS_SIMULATOR_UDID}" "com.margelo.rnnitrosqlite.example" > /dev/null
-
       - name: Run react-native-harness on iOS
-        run: bun run --cwd example test:harness:ios
+        uses: callstackincubator/react-native-harness@v1.0.0-alpha.21
+        with:
+          app: ios/build/Build/Products/Debug-iphonesimulator/NitroSQLiteExample.app
+          runner: ios
+          projectRoot: example
+          packageManager: bun

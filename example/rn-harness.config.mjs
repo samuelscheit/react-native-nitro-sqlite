@@ -14,7 +14,15 @@ const config = {
   runners: [
     androidPlatform({
       name: 'android',
-      device: androidEmulator('Pixel_8_API_35'),
+      device: androidEmulator('Pixel_9_Pro_Google_APIs_Android_15_API_35', {
+        apiLevel: 35,
+        profile: 'pixel_9',
+        diskSize: '6G',
+        heapSize: '1G',
+        snapshot: {
+          enabled: true,
+        },
+      }),
       bundleId: 'com.margelo.rnnitrosqlite.example',
     }),
     applePlatform({
