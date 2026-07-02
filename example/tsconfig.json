@@ -4,13 +4,15 @@
     "src",
     "tests",
     "index.js",
-    "../package",
+    "../packages/react-native-nitro-sqlite/src",
     "rn-harness.config.mjs"
   ],
   "compilerOptions": {
     "paths": {
+      "react-native-nitro-sqlite": [
+        "../packages/react-native-nitro-sqlite/src"
+      ],
       "*": ["./*"],
-      "react-native-nitro-sqlite": ["../package/src"],
       "@/*": ["./src/*"],
       "@tests/*": ["./tests/*"]
     }
