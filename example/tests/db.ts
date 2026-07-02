@@ -7,7 +7,7 @@ import { open } from 'react-native-nitro-sqlite'
 import {
   getDatabaseQueue,
   type DatabaseQueue,
-} from '../../../package/src/DatabaseQueue'
+} from '../../package/src/DatabaseQueue'
 
 const chance = new Chance()
 
