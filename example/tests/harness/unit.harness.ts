@@ -1,6 +1,6 @@
-import * as harnessTestApi from 'react-native-harness'
+import '@/initGlobals'
 import { registerUnitTests } from '@tests/unit'
-import { setTestApi } from '@tests/TestApi'
+import init from './init'
 
-setTestApi(harnessTestApi)
+init()
 registerUnitTests()
