@@ -10,7 +10,9 @@ module.exports = {
         extensions: ['.tsx', '.ts', '.js', '.json'],
         alias: {
           [pak.name]: path.join(__dirname, '../package', pak.source),
-          'stream': 'stream-browserify',
+          'crypto': 'react-native-quick-crypto',
+          'stream': 'readable-stream',
+          'buffer': 'react-native-quick-crypto',
           'react-native-sqlite-storage': 'react-native-nitro-sqlite',
           '^@/(.+)': './src/\\1',
           '^@tests/(.+)': './tests/\\1',
