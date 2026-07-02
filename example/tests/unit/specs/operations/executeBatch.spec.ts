@@ -1,7 +1,7 @@
-import { chance, expect } from '../../common'
+import { chance, expect } from '@tests/unit/common'
 import type { BatchQueryCommand } from 'react-native-nitro-sqlite'
-import { describe, it } from 'react-native-harness'
-import { testDb } from '../../../db'
+import { describe, it } from '@tests/TestApi'
+import { testDb } from '@tests/db'
 
 export default function registerExecuteBatchUnitTests() {
   describe('executeBatch', () => {

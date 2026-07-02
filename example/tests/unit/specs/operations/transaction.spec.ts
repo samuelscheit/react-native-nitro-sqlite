@@ -5,10 +5,10 @@ import {
   TEST_ERROR,
   TEST_ERROR_MESSAGE,
   TEST_ERROR_CODES,
-} from '../../common'
-import { describe, it } from 'react-native-harness'
-import type { User } from '../../../../model/User'
-import { testDb } from '../../../db'
+} from '@tests/unit/common'
+import { describe, it } from '@tests/TestApi'
+import type { User } from '@/model/User'
+import { testDb } from '@tests/db'
 
 export default function registerTransactionUnitTests() {
   describe('transaction', () => {

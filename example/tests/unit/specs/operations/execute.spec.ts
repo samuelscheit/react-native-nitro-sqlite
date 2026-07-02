@@ -1,6 +1,6 @@
-import { chance, expect, isNitroSQLiteError } from '../../common'
-import { describe, it } from 'react-native-harness'
-import { createArrayBufferTestDb, testDb } from '../../../db'
+import { chance, expect, isNitroSQLiteError } from '@tests/unit/common'
+import { describe, it } from '@tests/TestApi'
+import { createArrayBufferTestDb, testDb } from '@tests/db'
 
 export default function registerExecuteUnitTests() {
   describe('execute', () => {

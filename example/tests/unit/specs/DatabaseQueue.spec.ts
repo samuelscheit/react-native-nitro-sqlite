@@ -4,9 +4,9 @@ import {
   TEST_ERROR,
   TEST_ERROR_CODES,
   TEST_ERROR_MESSAGE,
-} from '../common'
-import { describe, it } from 'react-native-harness'
-import { testDb, testDbQueue } from '../../db'
+} from '@tests/unit/common'
+import { describe, it } from '@tests/TestApi'
+import { testDb, testDbQueue } from '@tests/db'
 import type { BatchQueryCommand } from 'react-native-nitro-sqlite'
 
 const TEST_QUERY = 'SELECT * FROM [User];'

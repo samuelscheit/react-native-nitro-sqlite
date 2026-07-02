@@ -1,16 +1,10 @@
-import { expect } from '../common'
-import {
-  afterAll,
-  beforeAll,
-  beforeEach,
-  describe,
-  it,
-} from 'react-native-harness'
+import { expect } from '@tests/unit/common'
+import { afterAll, beforeAll, beforeEach, describe, it } from '@tests/TestApi'
 import type { Repository } from 'typeorm'
 import { DataSource } from 'typeorm'
 import { typeORMDriver } from 'react-native-nitro-sqlite'
-import { User } from '../../../model/User'
-import { Book } from '../../../model/Book'
+import { User } from '@/model/User'
+import { Book } from '@/model/Book'
 
 let dataSource: DataSource
 let userRepository: Repository<User>
