@@ -6,7 +6,7 @@ on:
       - ".github/workflows/test-harness-ios.yml"
       - "example/ios/**"
       - "example/src/tests/**"
-      - "example/__tests__/**"
+      - "example/tests/**"
       - "example/rn-harness.config.mjs"
       - "example/jest.config.js"
       - "package/cpp/**"
