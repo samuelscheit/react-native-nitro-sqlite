@@ -1,37 +1,37 @@
 import {
   androidPlatform,
   androidEmulator,
-} from "@react-native-harness/platform-android";
+} from '@react-native-harness/platform-android'
 import {
   applePlatform,
   appleSimulator,
-} from "@react-native-harness/platform-apple";
+} from '@react-native-harness/platform-apple'
 
 const config = {
-  entryPoint: "./index.js",
-  appRegistryComponentName: "NitroSQLiteExample",
+  entryPoint: './index.js',
+  appRegistryComponentName: 'NitroSQLiteExample',
 
   runners: [
     androidPlatform({
-      name: "android",
-      device: androidEmulator("Pixel_8_API_35"),
-      bundleId: "com.margelo.rnnitrosqlite.example",
+      name: 'android',
+      device: androidEmulator('Pixel_8_API_35'),
+      bundleId: 'com.margelo.rnnitrosqlite.example',
     }),
     applePlatform({
-      name: "ios",
+      name: 'ios',
       device: appleSimulator(
-        process.env.IOS_SIMULATOR_NAME ?? "iPhone 17 Pro",
-        process.env.IOS_SIMULATOR_OS ?? "26.2",
+        process.env.IOS_SIMULATOR_NAME ?? 'iPhone 17 Pro',
+        process.env.IOS_SIMULATOR_OS ?? '26.2',
       ),
-      bundleId: "com.margelo.rnnitrosqlite.example",
+      bundleId: 'com.margelo.rnnitrosqlite.example',
     }),
   ],
 
-  defaultRunner: "android",
+  defaultRunner: 'android',
   bridgeTimeout: 300000,
 
   resetEnvironmentBetweenTestFiles: true,
   unstable__skipAlreadyIncludedModules: false,
-};
+}
 
-export default config;
+export default config

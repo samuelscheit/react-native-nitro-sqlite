@@ -1,6 +1,12 @@
 {
   "extends": "../config/tsconfig.json",
-  "include": ["src", "index.js", "../package", "__tests__/**/*"],
+  "include": [
+    "src",
+    "index.js",
+    "../package",
+    "__tests__/**/*",
+    "rn-harness.config.mjs"
+  ],
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
