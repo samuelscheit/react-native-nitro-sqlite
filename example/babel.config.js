@@ -12,6 +12,8 @@ module.exports = {
           [pak.name]: path.join(__dirname, '../package', pak.source),
           'stream': 'stream-browserify',
           'react-native-sqlite-storage': 'react-native-nitro-sqlite',
+          '^@/(.+)': './src/\\1',
+          '^@tests/(.+)': './tests/\\1',
         },
       },
     ],
