@@ -14,9 +14,9 @@ const config = {
   runners: [
     androidPlatform({
       name: 'android',
-      device: androidEmulator('Pixel_9_Pro_Google_APIs_Android_15_API_35', {
+      device: androidEmulator('Pixel_7_Pro_Google_APIs_Android_15_API_35', {
         apiLevel: 35,
-        profile: 'pixel_9',
+        profile: 'pixel_7_pro',
         diskSize: '6G',
         heapSize: '1G',
         snapshot: {
