@@ -1931,6 +1931,8 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
+  - RNNitroSqliteVec (9.6.0):
+    - RNNitroSQLite
   - RNScreens (4.18.0):
     - hermes-engine
     - RCTRequired
@@ -2060,6 +2062,7 @@ DEPENDENCIES:
   - ReactNativeDependencies (from `../../node_modules/react-native/third-party-podspecs/ReactNativeDependencies.podspec`)
   - "RNCClipboard (from `../../node_modules/@react-native-clipboard/clipboard`)"
   - RNNitroSQLite (from `../../packages/react-native-nitro-sqlite`)
+  - RNNitroSqliteVec (from `../../node_modules/react-native-nitro-sqlite-vec`)
   - RNScreens (from `../../node_modules/react-native-screens`)
   - Yoga (from `../../node_modules/react-native/ReactCommon/yoga`)
 
@@ -2225,6 +2228,8 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@react-native-clipboard/clipboard"
   RNNitroSQLite:
     :path: "../../packages/react-native-nitro-sqlite"
+  RNNitroSqliteVec:
+    :path: "../../node_modules/react-native-nitro-sqlite-vec"
   RNScreens:
     :path: "../../node_modules/react-native-screens"
   Yoga:
@@ -2309,10 +2314,11 @@ SPEC CHECKSUMS:
   ReactCommon: 7525e252c88d254545e3fdaea0000d1959dfbf20
   ReactNativeDependencies: 0cdc5c6985700a9d8f654762fa702169ef9cef9b
   RNCClipboard: 7a7d4557bfd3370b35c99dfecd92ae7b9fc4948a
-  RNNitroSQLite: d4dcda5cae90531900839746ca2009e1db222793
+  RNNitroSQLite: bad203a8435c5d843534398dc4822b3e80fbbd81
+  RNNitroSqliteVec: cca5db2aec2a31f4e26a911bda7cac8fc2cdc2e2
   RNScreens: dd5c879d56b543c7ff8e593739eeb66093d60263
   Yoga: d68c8a4bde0af9c17b15540fffa330d26398d150
 
-PODFILE CHECKSUM: efa901d259f2a40103bc359243a7632881296bf1
+PODFILE CHECKSUM: 6933dbd8b4eea93df54a57c95e03351734e37a5b
 
 COCOAPODS: 1.15.2
