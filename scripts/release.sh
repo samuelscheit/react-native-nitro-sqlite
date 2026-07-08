@@ -7,6 +7,7 @@ echo "Provided options: $*"
 
 release_it_args=("$@")
 forward_args=()
+package_args=()
 skip_next=false
 
 if [ "$#" -gt 0 ]; then
@@ -36,6 +37,13 @@ for arg in "${release_it_args_without_increment[@]}"; do
       ;;
     *)
       forward_args+=("$arg")
+      case "$arg" in
+        --git*|--no-git*|--github*|--no-github*)
+          ;;
+        *)
+          package_args+=("$arg")
+          ;;
+      esac
       ;;
   esac
 done
@@ -53,11 +61,11 @@ echo "Resolved release version: $release_version"
 
 echo "Publishing react-native-nitro-sqlite@$release_version to NPM"
 cd packages/react-native-nitro-sqlite
-bun release "$release_version" "${forward_args[@]}"
+bun release "$release_version" "${package_args[@]}"
 
 echo "Publishing react-native-nitro-sqlite-vec@$release_version to NPM"
 cd ../react-native-nitro-sqlite-vec
-bun release "$release_version" "${forward_args[@]}"
+bun release "$release_version" "${package_args[@]}"
 
 echo "Creating a Git bump commit and GitHub release"
 
