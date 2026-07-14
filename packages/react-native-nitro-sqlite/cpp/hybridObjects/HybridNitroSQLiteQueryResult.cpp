@@ -10,6 +10,23 @@ namespace margelo::nitro::rnnitrosqlite {
 
 namespace {
 
+  constexpr size_t nodePadding = 24;
+
+  size_t getValueExternalMemorySize(const SQLiteValue& value) {
+    if (std::holds_alternative<std::string>(value)) {
+      return std::get<std::string>(value).capacity();
+    }
+
+    if (std::holds_alternative<std::shared_ptr<ArrayBuffer>>(value)) {
+      const auto& buffer = std::get<std::shared_ptr<ArrayBuffer>>(value);
+      if (buffer != nullptr && buffer->isOwner()) {
+        return buffer->size();
+      }
+    }
+
+    return 0;
+  }
+
   /**
    * Compute the approximate external memory size of a single result row.
    * This includes:
@@ -18,9 +35,15 @@ namespace {
    */
   size_t getRowExternalMemorySize(const SQLiteQueryResultRow& row) {
     size_t bucketMemory = row.bucket_count() * sizeof(void*);
-    constexpr size_t nodePadding = 24;
-    size_t nodesMemory = row.size() * (sizeof(std::pair<std::string, SQLiteValue>) + nodePadding);
-    return bucketMemory + nodesMemory;
+    size_t nodesMemory = row.size() * (sizeof(SQLiteQueryResultRow::value_type) + nodePadding);
+    size_t contentsMemory = 0;
+
+    for (const auto& [columnName, value] : row) {
+      contentsMemory += columnName.capacity();
+      contentsMemory += getValueExternalMemorySize(value);
+    }
+
+    return bucketMemory + nodesMemory + contentsMemory;
   }
 
   /**
@@ -49,10 +72,10 @@ namespace {
    * - Metadata contents, especially the `name` string on each metadata entry.
    */
   size_t getMetadataExternalMemorySize(const SQLiteQueryTableMetadata& metadata) {
-    size_t size = 0;
+    size_t size = metadata.bucket_count() * sizeof(void*);
+    size += metadata.size() * (sizeof(SQLiteQueryTableMetadata::value_type) + nodePadding);
 
     for (const auto& [columnName, columnMeta] : metadata) {
-
       size += columnName.capacity();
       size += columnMeta.name.capacity();
     }

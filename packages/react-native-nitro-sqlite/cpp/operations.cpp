@@ -25,7 +25,6 @@ using namespace margelo::nitro::rnnitrosqlite;
 
 namespace margelo::rnnitrosqlite {
 
-
 static constexpr double kInt64MinAsDouble = static_cast<double>(std::numeric_limits<int64_t>::min());
 static constexpr double kInt64UpperBoundAsDouble = -kInt64MinAsDouble;
 
@@ -128,8 +127,7 @@ void bindStatement(sqlite3_stmt* statement, const SQLiteQueryParams& values) {
     } else if (std::holds_alternative<double>(value)) {
       // Bind whole numbers as INTEGER so vec0 rowid/pk/partition (which reject REAL) work; SQLite still coerces to REAL for REAL columns.
       double doubleValue = std::get<double>(value);
-      if (std::trunc(doubleValue) == doubleValue && doubleValue >= kInt64MinAsDouble &&
-          doubleValue < kInt64UpperBoundAsDouble) {
+      if (std::trunc(doubleValue) == doubleValue && doubleValue >= kInt64MinAsDouble && doubleValue < kInt64UpperBoundAsDouble) {
         sqlite3_bind_int64(statement, sqliteIndex, static_cast<sqlite3_int64>(doubleValue));
       } else {
         sqlite3_bind_double(statement, sqliteIndex, doubleValue);
@@ -258,7 +256,48 @@ std::shared_ptr<HybridNitroSQLiteQueryResult> sqliteExecute(const std::string& d
 
   int rowsAffected = sqlite3_changes(db);
   long long latestInsertRowId = sqlite3_last_insert_rowid(db);
-  return std::make_shared<HybridNitroSQLiteQueryResult>(results, static_cast<double>(latestInsertRowId), rowsAffected, metadata);
+  return std::make_shared<HybridNitroSQLiteQueryResult>(std::move(results), static_cast<double>(latestInsertRowId), rowsAffected,
+                                                        std::move(metadata));
+}
+
+SQLiteOperationResult sqliteExecuteForRowsAffected(const std::string& dbName, const std::string& query,
+                                                   const std::optional<SQLiteQueryParams>& params) {
+  if (dbMap.count(dbName) == 0) {
+    throw NitroSQLiteException::DatabaseNotOpen(dbName);
+  }
+
+  auto db = dbMap[dbName];
+
+  sqlite3_stmt* statement;
+  int statementStatus = sqlite3_prepare_v2(db, query.c_str(), -1, &statement, NULL);
+  if (statementStatus == SQLITE_OK) {
+    if (params) {
+      bindStatement(statement, *params);
+    }
+  } else {
+    throw NitroSQLiteException::SqlExecution(sqlite3_errmsg(db));
+  }
+
+  bool isFailed = false;
+  while (true) {
+    int result = sqlite3_step(statement);
+    if (result == SQLITE_ROW) {
+      continue;
+    }
+    if (result != SQLITE_DONE) {
+      isFailed = true;
+    }
+    break;
+  }
+
+  sqlite3_finalize(statement);
+
+  if (isFailed) {
+    throw NitroSQLiteException::SqlExecution(sqlite3_errmsg(db));
+  }
+
+  int rowsAffected = sqlite3_changes(db);
+  return {.rowsAffected = rowsAffected};
 }
 
 SQLiteOperationResult sqliteExecuteLiteral(const std::string& dbName, const std::string& query) {

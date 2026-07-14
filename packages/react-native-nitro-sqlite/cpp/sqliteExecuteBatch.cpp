@@ -42,11 +42,11 @@ SQLiteOperationResult sqliteExecuteBatch(const std::string& dbName, const std::v
     int rowsAffected = 0;
     sqliteExecuteLiteral(dbName, "BEGIN EXCLUSIVE TRANSACTION");
     for (int i = 0; i < commandCount; i++) {
-      const auto command = commands.at(i);
+      const auto& command = commands.at(i);
 
       // Batch only aggregates rowsAffected; per-command result rows are discarded.
-      auto result = sqliteExecute(dbName, command.sql, command.params);
-      rowsAffected += result->getRowsAffected();
+      auto result = sqliteExecuteForRowsAffected(dbName, command.sql, command.params);
+      rowsAffected += result.rowsAffected;
     }
     sqliteExecuteLiteral(dbName, "COMMIT");
     return {
