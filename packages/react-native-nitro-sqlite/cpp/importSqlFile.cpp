@@ -17,15 +17,15 @@ SQLiteOperationResult importSqlFile(const std::string& dbName, const std::string
     try {
       int rowsAffected = 0;
       int commands = 0;
-      sqliteExecuteLiteral(dbName, "BEGIN EXCLUSIVE TRANSACTION");
+      sqliteExecuteCommand(dbName, "BEGIN EXCLUSIVE TRANSACTION");
       while (std::getline(sqFile, line, '\n')) {
         if (!line.empty()) {
           try {
-            SQLiteOperationResult result = sqliteExecuteLiteral(dbName, line);
+            SQLiteOperationResult result = sqliteExecuteCommand(dbName, line);
             rowsAffected += result.rowsAffected;
             commands++;
           } catch (NitroSQLiteException& e) {
-            sqliteExecuteLiteral(dbName, "ROLLBACK");
+            sqliteExecuteCommand(dbName, "ROLLBACK");
             sqFile.close();
             throw NitroSQLiteException::CouldNotLoadFile(fileLocation, "Transaction was rolled back");
           }
@@ -33,11 +33,11 @@ SQLiteOperationResult importSqlFile(const std::string& dbName, const std::string
       }
 
       sqFile.close();
-      sqliteExecuteLiteral(dbName, "COMMIT");
+      sqliteExecuteCommand(dbName, "COMMIT");
       return {.rowsAffected = rowsAffected, .commands = commands};
     } catch (...) {
       sqFile.close();
-      sqliteExecuteLiteral(dbName, "ROLLBACK");
+      sqliteExecuteCommand(dbName, "ROLLBACK");
       throw NitroSQLiteException(NitroSQLiteExceptionType::UnknownError, "Unexpected error. Transaction was rolled back");
     }
   } else {
