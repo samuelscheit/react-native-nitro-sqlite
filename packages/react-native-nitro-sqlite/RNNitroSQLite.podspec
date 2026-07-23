@@ -48,14 +48,12 @@ Pod::Spec.new do |s|
 
   optimizedCflags = '$(inherited) -DSQLITE_DQS=0 -DSQLITE_DEFAULT_MEMSTATUS=0 -DSQLITE_DEFAULT_WAL_SYNCHRONOUS=1 -DSQLITE_LIKE_DOESNT_MATCH_BLOBS=1 -DSQLITE_MAX_EXPR_DEPTH=0 -DSQLITE_OMIT_DEPRECATED=1 -DSQLITE_OMIT_PROGRESS_CALLBACK=1 -DSQLITE_OMIT_SHARED_CACHE=1 -DSQLITE_USE_ALLOCA=1'
 
-  if performance_mode == '1' then
+  if performance_mode == 1
     log_message.call("Thread unsafe (1) performance mode enabled. Use only transactions! 🚀🚀")
-    xcconfig[:OTHER_CFLAGS] = optimizedCflags + ' -DSQLITE_THREADSAFE=0 '
-  end
-
-  if performance_mode == '2' then
+    s.pod_target_xcconfig["OTHER_CFLAGS"] = optimizedCflags + ' -DSQLITE_THREADSAFE=0 '
+  elsif performance_mode == 2
     log_message.call("Thread safe (2) performance mode enabled 🚀")
-    xcconfig[:OTHER_CFLAGS] = optimizedCflags + ' -DSQLITE_THREADSAFE=1 '
+    s.pod_target_xcconfig["OTHER_CFLAGS"] = optimizedCflags + ' -DSQLITE_THREADSAFE=1 '
   end
 
   if ENV['NITRO_SQLITE_USE_PHONE_VERSION'] == '1' then
