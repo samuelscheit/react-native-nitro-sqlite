@@ -10,6 +10,8 @@ namespace margelo::nitro::rnnitrosqlite {
 
 namespace {
 
+  constexpr size_t nodePadding = 24;
+
   /**
    * Compute the approximate external memory size of a single result row.
    * This includes:
@@ -18,7 +20,6 @@ namespace {
    */
   size_t getRowExternalMemorySize(const SQLiteQueryResultRow& row) {
     size_t bucketMemory = row.bucket_count() * sizeof(void*);
-    constexpr size_t nodePadding = 24;
     size_t nodesMemory = row.size() * (sizeof(std::pair<std::string, SQLiteValue>) + nodePadding);
     return bucketMemory + nodesMemory;
   }
