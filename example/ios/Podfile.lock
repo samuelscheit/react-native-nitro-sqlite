@@ -2237,7 +2237,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   FBLazyVector: 4ee5f665093abe339f4b579fc3d59f65c8af196c
-  hermes-engine: 56e1f8e0c324283e1cc2c35f56dc6037c141f67d
+  hermes-engine: 74e3a44c04bd3c8d303fc8dc8a44aa67436c788b
   NitroModules: 587af3c2bc93f5c9f9b39aec315eb29509a7c537
   OpenSSL-Universal: ecee7b138fa75a74ecf00d7ffd248fb584739b9e
   QuickCrypto: 790e6537bb81a11d036a24ce3248b51f66857ceb
@@ -2249,7 +2249,7 @@ SPEC CHECKSUMS:
   React: e3af85e498bf268511ed5899200e3d267e548ddf
   React-callinvoker: 9dc4fbc61d34cd3e3d496fa4558c9cfbc1caa2ce
   React-Core: 5dc2976a6931ed3c36157d19111c4a265bffcff6
-  React-Core-prebuilt: 1a645974bd5f850a1234bf55ccee6b8b07ef4610
+  React-Core-prebuilt: 39445f1e9cc9b58a3e4f5e15533e0c4f8c90b927
   React-CoreModules: d80b3b37587eb5c199632c9abd7c2319c594f729
   React-cxxreact: 851adbc413c9d58befb2792026bf3918e31aeb2f
   React-debug: ae23c7439aa4b4b64162909de91eff3897d28263
@@ -2312,10 +2312,10 @@ SPEC CHECKSUMS:
   ReactAppDependencyProvider: 6e87125b0a52058c037d674435761b4db4579f4b
   ReactCodegen: ff6b8d9d619343c281b7700362fa3ac5ec0753bb
   ReactCommon: 7525e252c88d254545e3fdaea0000d1959dfbf20
-  ReactNativeDependencies: 0cdc5c6985700a9d8f654762fa702169ef9cef9b
+  ReactNativeDependencies: bc490df2cf4e3d116055debc5b8daed94728d321
   RNCClipboard: 7a7d4557bfd3370b35c99dfecd92ae7b9fc4948a
-  RNNitroSQLite: bad203a8435c5d843534398dc4822b3e80fbbd81
-  RNNitroSqliteVec: cca5db2aec2a31f4e26a911bda7cac8fc2cdc2e2
+  RNNitroSQLite: d32b18bd4e76ba95ba8542ebd966b29dd42f67e4
+  RNNitroSqliteVec: 62179f9556fea49c3ec293e8256d51d6b2da8f93
   RNScreens: dd5c879d56b543c7ff8e593739eeb66093d60263
   Yoga: d68c8a4bde0af9c17b15540fffa330d26398d150
 
