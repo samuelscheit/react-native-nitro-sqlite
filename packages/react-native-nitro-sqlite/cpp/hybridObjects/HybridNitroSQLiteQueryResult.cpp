@@ -50,10 +50,10 @@ namespace {
    * - Metadata contents, especially the `name` string on each metadata entry.
    */
   size_t getMetadataExternalMemorySize(const SQLiteQueryTableMetadata& metadata) {
-    size_t size = 0;
+    size_t size = metadata.bucket_count() * sizeof(void*);
+    size += metadata.size() * (sizeof(SQLiteQueryTableMetadata::value_type) + nodePadding);
 
     for (const auto& [columnName, columnMeta] : metadata) {
-
       size += columnName.capacity();
       size += columnMeta.name.capacity();
     }
