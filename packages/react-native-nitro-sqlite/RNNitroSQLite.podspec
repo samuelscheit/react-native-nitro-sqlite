@@ -2,6 +2,9 @@ require "json"
 
 package = JSON.parse(File.read(File.join(__dir__, "package.json")))
 folly_compiler_flags = '-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1'
+log_message = lambda do |message|
+  puts "\e[34m#{message}\e[0m"
+end
 
 # TODO: Should be customizable in package.json.
 # Used to create comparable benchmark results
@@ -49,10 +52,10 @@ Pod::Spec.new do |s|
   optimizedCflags = '$(inherited) -DSQLITE_DQS=0 -DSQLITE_DEFAULT_MEMSTATUS=0 -DSQLITE_DEFAULT_WAL_SYNCHRONOUS=1 -DSQLITE_LIKE_DOESNT_MATCH_BLOBS=1 -DSQLITE_MAX_EXPR_DEPTH=0 -DSQLITE_OMIT_DEPRECATED=1 -DSQLITE_OMIT_PROGRESS_CALLBACK=1 -DSQLITE_OMIT_SHARED_CACHE=1 -DSQLITE_USE_ALLOCA=1'
 
   if performance_mode == 1
-    Pod::UI.puts "Thread unsafe (1) performance mode enabled. Use only transactions! 🚀🚀"
+    log_message.call("Thread unsafe (1) performance mode enabled. Use only transactions! 🚀🚀")
     xcconfig["OTHER_CFLAGS"] = optimizedCflags + ' -DSQLITE_THREADSAFE=0 '
   elsif performance_mode == 2
-    Pod::UI.puts "Thread safe (2) performance mode enabled 🚀"
+    log_message.call("Thread safe (2) performance mode enabled 🚀")
     xcconfig["OTHER_CFLAGS"] = optimizedCflags + ' -DSQLITE_THREADSAFE=1 '
   end
 
