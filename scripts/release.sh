@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
+set -eo pipefail
 
 echo "Starting the release process..."
 echo "Provided options: $*"
