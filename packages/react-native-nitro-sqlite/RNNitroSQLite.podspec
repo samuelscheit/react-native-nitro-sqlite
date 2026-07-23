@@ -30,7 +30,7 @@ Pod::Spec.new do |s|
     "cpp/**/*.{h,hpp,c,cpp}"
   ]
 
-  s.pod_target_xcconfig = {
+  xcconfig = {
     :GCC_PREPROCESSOR_DEFINITIONS => "HAVE_FULLFSYNC=1",
     :WARNING_CFLAGS => "-Wno-shorten-64-to-32 -Wno-comma -Wno-unreachable-code -Wno-conditional-uninitialized -Wno-deprecated-declarations",
     'CLANG_CXX_LANGUAGE_STANDARD' => 'c++20',
@@ -49,12 +49,14 @@ Pod::Spec.new do |s|
   optimizedCflags = '$(inherited) -DSQLITE_DQS=0 -DSQLITE_DEFAULT_MEMSTATUS=0 -DSQLITE_DEFAULT_WAL_SYNCHRONOUS=1 -DSQLITE_LIKE_DOESNT_MATCH_BLOBS=1 -DSQLITE_MAX_EXPR_DEPTH=0 -DSQLITE_OMIT_DEPRECATED=1 -DSQLITE_OMIT_PROGRESS_CALLBACK=1 -DSQLITE_OMIT_SHARED_CACHE=1 -DSQLITE_USE_ALLOCA=1'
 
   if performance_mode == 1
-    log_message.call("Thread unsafe (1) performance mode enabled. Use only transactions! 🚀🚀")
-    s.pod_target_xcconfig["OTHER_CFLAGS"] = optimizedCflags + ' -DSQLITE_THREADSAFE=0 '
+    Pod::UI.puts "Thread unsafe (1) performance mode enabled. Use only transactions! 🚀🚀"
+    xcconfig["OTHER_CFLAGS"] = optimizedCflags + ' -DSQLITE_THREADSAFE=0 '
   elsif performance_mode == 2
-    log_message.call("Thread safe (2) performance mode enabled 🚀")
-    s.pod_target_xcconfig["OTHER_CFLAGS"] = optimizedCflags + ' -DSQLITE_THREADSAFE=1 '
+    Pod::UI.puts "Thread safe (2) performance mode enabled 🚀"
+    xcconfig["OTHER_CFLAGS"] = optimizedCflags + ' -DSQLITE_THREADSAFE=1 '
   end
+
+  s.pod_target_xcconfig = xcconfig
 
   if ENV['NITRO_SQLITE_USE_PHONE_VERSION'] == '1' then
     s.exclude_files = "cpp/sqlite/sqlite3.c", "cpp/sqlite/sqlite3.h"
