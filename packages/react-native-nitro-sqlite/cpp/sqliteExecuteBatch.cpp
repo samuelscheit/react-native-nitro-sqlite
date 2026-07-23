@@ -40,15 +40,13 @@ SQLiteOperationResult sqliteExecuteBatch(const std::string& dbName, const std::v
 
   try {
     int rowsAffected = 0;
-    sqliteExecuteLiteral(dbName, "BEGIN EXCLUSIVE TRANSACTION");
-    for (int i = 0; i < commandCount; i++) {
-      const auto command = commands.at(i);
-
-      // Batch only aggregates rowsAffected; per-command result rows are discarded.
-      auto result = sqliteExecute(dbName, command.sql, command.params);
-      rowsAffected += result->getRowsAffected();
+    sqliteExecuteCommand(dbName, "BEGIN EXCLUSIVE TRANSACTION");
+    for (const auto& command : commands) {
+      auto result = sqliteExecuteCommand(dbName, command.sql, command.params);
+      rowsAffected += result.rowsAffected;
     }
-    sqliteExecuteLiteral(dbName, "COMMIT");
+
+    sqliteExecuteCommand(dbName, "COMMIT");
     return {
         .rowsAffected = rowsAffected,
         .commands = (int)commandCount,
@@ -56,7 +54,7 @@ SQLiteOperationResult sqliteExecuteBatch(const std::string& dbName, const std::v
   } catch (NitroSQLiteException& e) {
     // Roll back exactly once; a failed ROLLBACK must not mask the original error.
     try {
-      sqliteExecuteLiteral(dbName, "ROLLBACK");
+      sqliteExecuteCommand(dbName, "ROLLBACK");
     } catch (...) {
       // ignore — surface the original error below
     }

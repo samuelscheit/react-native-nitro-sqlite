@@ -42,6 +42,23 @@ export default function registerExecuteBatchUnitTests() {
       ])
     })
 
+    it('reports zero rows affected for read-only commands', () => {
+      const id = chance.integer()
+      testDb.execute(
+        'INSERT INTO "User" (id, name, age, networth) VALUES(?, ?, ?, ?)',
+        [id, chance.name(), chance.integer(), chance.floating()],
+      )
+
+      const result = testDb.executeBatch([
+        {
+          query: 'SELECT * FROM User WHERE id = ?',
+          params: [id],
+        },
+      ])
+
+      expect(result.rowsAffected).toBe(0)
+    })
+
     it('Async batch execute', async () => {
       const id1 = chance.integer()
       const name1 = chance.name()
