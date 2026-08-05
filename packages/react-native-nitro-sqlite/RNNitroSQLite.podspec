@@ -6,6 +6,10 @@ log_message = lambda do |message|
   puts "\e[34m#{message}\e[0m"
 end
 
+# TODO: Should be customizable in package.json.
+# Used to create comparable benchmark results
+performance_mode = 1
+
 Pod::Spec.new do |s|
   s.name         = "RNNitroSQLite"
   s.version      = package["version"]
@@ -35,10 +39,13 @@ Pod::Spec.new do |s|
 
   optimizedCflags = '$(inherited) -DSQLITE_DQS=0 -DSQLITE_DEFAULT_MEMSTATUS=0 -DSQLITE_DEFAULT_WAL_SYNCHRONOUS=1 -DSQLITE_LIKE_DOESNT_MATCH_BLOBS=1 -DSQLITE_MAX_EXPR_DEPTH=0 -DSQLITE_OMIT_DEPRECATED=1 -DSQLITE_OMIT_PROGRESS_CALLBACK=1 -DSQLITE_OMIT_SHARED_CACHE=1 -DSQLITE_USE_ALLOCA=1'
 
-  # The native async APIs execute on Nitro's worker pool, so every SQLite
-  # connection must serialize access across threads.
-  log_message.call("Thread-safe SQLite mode enabled")
-  other_cflags = optimizedCflags + ' -DSQLITE_THREADSAFE=1 '
+  if performance_mode == 1
+    log_message.call("Thread unsafe (1) performance mode enabled. Use only transactions! 🚀🚀")
+    other_cflags = optimizedCflags + ' -DSQLITE_THREADSAFE=0 '
+  elsif performance_mode == 2
+    log_message.call("Thread safe (2) performance mode enabled 🚀")
+    other_cflags = optimizedCflags + ' -DSQLITE_THREADSAFE=1 '
+  end
 
   s.pod_target_xcconfig = {
     :GCC_PREPROCESSOR_DEFINITIONS => "HAVE_FULLFSYNC=1",
