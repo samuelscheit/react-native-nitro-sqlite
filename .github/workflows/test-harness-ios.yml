@@ -1,6 +1,7 @@
 name: Test Harness iOS
 
 on:
+  workflow_dispatch:
   pull_request:
     paths:
       - ".github/workflows/test-harness-ios.yml"
