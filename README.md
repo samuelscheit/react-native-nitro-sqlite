@@ -111,6 +111,24 @@ const db = open({ name: 'myDb.sqlite' })
 
 ---
 
+# SQLite thread safety on Apple platforms
+
+Apple builds default to `NITRO_SQLITE_THREADSAFE=0` to preserve the existing iOS performance configuration. Set `NITRO_SQLITE_THREADSAFE=1` before installing Pods when one SQLite connection can be used from more than one native thread:
+
+```bash
+NITRO_SQLITE_THREADSAFE=1 npx pod-install
+```
+
+For React Native macOS, run the equivalent command from `macos/`:
+
+```bash
+NITRO_SQLITE_THREADSAFE=1 pod install
+```
+
+The repository's macOS example sets this automatically because Nitro async APIs run on worker threads.
+
+---
+
 # Basic usage
 
 ## Execute (sync and async)
